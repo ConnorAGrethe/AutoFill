@@ -9,42 +9,7 @@ public class AutoFill{
     private ArrayList<String> words;
     private ArrayList<Integer> counts;
     private ArrayList<String> text;
-   
-    /* finds 3 most common results with the following letters
-    // iterates and finds all possibles words
-    // after loop, finds 3 highest counts as possible word choices
-    */
-    public String[] predictText(String letters){
-        ArrayList<String> tempWords;
-        ArrayList<Integer> tempInts;
-        for(int i=0; i<words.length;i++){
-            if(letters.substring().equals(words.get(i).substring(0,letters.length))){
-                tempWords.add(words.get(i));
-                tempInts.add(counts.get(i));
-            }
-        }
-        int[] peaks = {0,0,0};
-        String[] peakWords = new String[3];
-        for(int i=0; i<tempWords.size();i++){
-            for(int x=0;x<peaks.length;x++){
-                if(tempInts.get(i)>peaks[x]){
-                    if(x=2){
-                        peaks[x] = tempInts.get(i);
-                        peakWords[x] = tempWords.get(i);
-                    }
-                    else{
-                        peaks[x+1] = peaks[x];
-                        peakWords[x+1] = peakWords[x];
-                        peaks[x] = tempInts.get(i);
-                        peakWords[x] = tempWords.get(i);
-                    }
-                }
-            }
-            
-        }
-        return peakWords;
-    } 
-    // end of method
+    
 
     //JFrame variables
     private JFrame frame;
@@ -53,7 +18,56 @@ public class AutoFill{
     private JButton b2;
     private JButton b3;
 
+    /* finds 3 most common results with the following letters
+    // iterates and finds all possibles words
+    // after loop, finds 3 highest counts as possible word choices
+    */
+    public String[] predictText(String letters){   
+        ArrayList<String> tempWords = new ArrayList<String>();
+        ArrayList<Integer> tempInts = new ArrayList<Integer>();
+        for(int i=0; i<words.size();i++){
+            if(words.get(i).length()>=letters.length()){
+                if(letters.equals(words.get(i).substring(0,letters.length()))){
+                    tempWords.add(words.get(i));
+                    tempInts.add(counts.get(i));
+                }
+            }
+        }
+        int[] peaks = {0,0,0};
+        String[] peakWords = new String[3];
+        for(int i=0; i<tempWords.size();i++){
+            for(int x=0;x<peaks.length;x++){
+                if(tempInts.get(i)>peaks[x]){
+                    // if(x==2){
+                        peaks[x] = tempInts.get(i);
+                        peakWords[x] = tempWords.get(i);
+                        x+=3;
+                    // }
+                    // else{
+                    //     peaks[x+1] = peaks[x];
+                    //     peakWords[x+1] = peakWords[x];
+                    //     peaks[x] = tempInts.get(i);
+                    //     peakWords[x] = tempWords.get(i);
+                    // }
+                }
+            }
+            
+        }
+        for(int i=0; i<peakWords.length; i++){
+            if(peakWords[i] == null){
+                peakWords[i] = " ";
+            }
+        }
+        return peakWords;
+    } 
+    // end of method
+
+    
+
     public AutoFill(){
+        words = FileReader.toStringArrayList("1000-common-words.txt");
+        counts = FileReader.toIntArrayList("values.txt");
+
     //JFrame shenanigans
         frame = new JFrame("AutoFill");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -85,10 +99,11 @@ public class AutoFill{
                 }
                 text.add(currentText.substring(x));
                 System.out.println(text);
-                //String[] predict = predictText(text.get(text.size()-1));
-               // b1.setText(predict[1]);
+                String[] predict = predictText(text.get(text.size()-1));
+                System.out.println(predict[0]+" "+predict[1]+" "+predict[2]);
+                //b1.setText(predict[1]);
                // b2.setText(predict[2]);
-              //  b3.setText(predict[3]);
+               // b3.setText(predict[3]);
             }
         });
         frame.setVisible(true);

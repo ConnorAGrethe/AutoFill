@@ -76,10 +76,27 @@ public class FileReader {
         Scanner fileReader = createScanner(myFile);
         int numLines = countFileLines(myFile);
         
-        ArrayList<String> arr = new ArrayList<>(numLines);
+        ArrayList<String> arr = new ArrayList<String>(numLines);
         
         for (int i = 0; i < numLines; i++) {
             arr.add(fileReader.nextLine());
+        }
+        
+        fileReader.close(); // close the scanner
+        return arr;
+    }
+
+    public static ArrayList<Integer> toIntArrayList(String fileName){
+        File myFile = new File(fileName);
+        Scanner fileReader = createScanner(myFile);
+        int numLines = countFileLines(myFile);
+        
+        ArrayList<Integer> arr = new ArrayList<Integer>(numLines);
+        
+        for (int i = 0; i < numLines; i++) {
+            arr.add(fileReader.nextInt());
+            if(fileReader.hasNextLine())
+                fileReader.nextLine();
         }
         
         fileReader.close(); // close the scanner
