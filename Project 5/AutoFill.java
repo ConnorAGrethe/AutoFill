@@ -5,10 +5,12 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+// import java.lang.Math.*;
 
 // processing forum how to edit a text file
 import java.io.FileWriter;
 import java.io.BufferedWriter;
+import java.io.*;
 
 public class AutoFill{
     //Arrays and array lists used throught the project
@@ -74,20 +76,58 @@ public class AutoFill{
     public void changeInts(String word){
         int index = words.indexOf(word);
         if(index != -1){
-        int value = counts.get(index);
-        if(value > 1000){
-            value = value + (10000-value)/1000;
-        }
-        else if(value > 100){
-            value = value + (1000-value)/10;
-        }
-        else{
-            value += 101-value;
-        }
-        counts.set(index,value);
-        System.out.println(counts.get(index));
+            int value = counts.get(index);
+            
+            value = 1075*(int)Math.log((double)value);
+            counts.set(index,value);
+            System.out.println(counts.get(index));
+            writeFile("values.txt",aString(counts));
         }
     }
+
+
+
+    
+    // public static String readFile(String filename) throws IOException {
+    //     File file = new File(filename);
+    //     int len = (int) file.length();
+    //     byte[] bytes = new byte[len];
+    //     FileInputStream fis = null;
+    //     try {
+    //         fis = new FileInputStream(file);
+    //         assert len == fis.read(bytes);
+    //     } catch (IOException e) {
+    //         close(fis);
+    //         throw e;
+    //     }
+    //     return new String(bytes, "UTF-8");
+    // }
+    public String aString(ArrayList<Integer> ints){
+        String s = "";
+        for(int i=0;i<ints.size();i++){
+            s += ints.get(i) + "\n";
+        }
+        return s;
+    }
+
+    public static void writeFile(String filename, String text) throws IOException {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(filename);
+            fos.write(text.getBytes("UTF-8"));
+        } catch (IOException e) {
+            close(fos);
+            throw e;
+        }
+    }
+
+    public static void close(Closeable closeable) {
+        try {
+            closeable.close();
+        } catch(IOException ignored) {
+        }
+    }
+    
 
 
 
@@ -154,9 +194,9 @@ public class AutoFill{
                 b2.setText(predict[1]);
                 b3.setText(predict[2]);
 
-                System.out.println(t);
-                System.out.println(text.size());
-                System.out.println(text);
+                // System.out.println(t);
+                // System.out.println(text.size());
+                // System.out.println(text);
                 if(text.size()>t && t!=2){
                     changeInts(text.get(text.size()-2).substring(0));
                 } else if(text.size()>t){
